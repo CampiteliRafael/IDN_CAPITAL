@@ -1,6 +1,6 @@
 import jsonwebtoken, { SignOptions } from 'jsonwebtoken';
-import { TokenPayload, ITokenService } from './interfaces/ITokenService';
-import { InvalidTokenError } from '../../domain/errors';
+import { TokenPayload, ITokenService } from './interfaces/ITokenService.js';
+import { InvalidTokenError } from '../../domain/errors/index.js';
 
 export class JwtTokenService implements ITokenService {
     private secretKey: string

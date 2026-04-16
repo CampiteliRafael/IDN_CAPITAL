@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
-import { User } from '../../domain/entities/User';
+import { IUserRepository } from '../../domain/repositories/IUserRepository.js';
+import { User } from '../../domain/entities/User.js';
 
 export class PrismaUserRepository implements IUserRepository {
     private prisma: PrismaClient;

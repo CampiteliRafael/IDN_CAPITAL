@@ -1,10 +1,10 @@
-import { IUserRepository } from "../../domain/repositories";
-import { IHashService } from "../services";
-import { User } from "../../domain/entities/User";
-import { ITokenService, TokenPayload } from "../services";
-import { CreateUserDto } from "../dtos";
-import { UserAlreadyExistsError } from "../../domain//errors";
-import { UserResponseDto } from "../dtos";
+import { IUserRepository } from "../../domain/repositories/index.js";
+import { IHashService } from "../services/index.js";
+import { User } from "../../domain/entities/User.js";
+import { ITokenService, TokenPayload } from "../services/index.js";
+import { CreateUserDto } from "../dtos/index.js";
+import { UserAlreadyExistsError } from "../../domain/errors/index.js";
+import { UserResponseDto } from "../dtos/index.js";
 
 interface RegisterResponse {
     user: UserResponseDto;

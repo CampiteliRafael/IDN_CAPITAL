@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Role } from '../../domain/entities/User';
+import { Role } from '../../domain/entities/User.js';
 
 export const CreateUserSchema = z.object({
     email: z.string()

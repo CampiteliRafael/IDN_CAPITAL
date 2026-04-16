@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { IHashService } from './interfaces/IHashService';
+import { IHashService } from './interfaces/IHashService.js';
 
 export class BcryptHashService implements IHashService {
     private readonly saltRounds: number;

@@ -1,14 +1,21 @@
 import express, { Express } from 'express';
-import { authRoutes } from './routes';
-import { errorHandler } from './middlewares';
-import { env } from '../infrastructure/config/env';
+import { authRoutes } from './routes/index.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { env } from '../infrastructure/config/env.js';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
+app.use(cors({
+    origin: env.frontendUrl,
+    credentials: true,
+}));
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/health', (req, res) => res.status(200).send('OK'));
+app.get('/health', (req, res) => res.status(200).send('OK'));
 app.use('/auth', authRoutes);
 app.use(errorHandler);
 

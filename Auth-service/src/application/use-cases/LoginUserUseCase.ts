@@ -1,9 +1,9 @@
-import { IUserRepository } from "../../domain/repositories";
-import { IHashService } from "../services";
-import { UserResponseDto } from "../dtos";
-import { ITokenService, TokenPayload } from "../services";
-import { LoginDto } from "../dtos";
-import { InvalidCredentialsError, UserNotFoundError } from "../../domain/errors";
+import { IUserRepository } from "../../domain/repositories/index.js";
+import { IHashService } from "../services/index.js";
+import { UserResponseDto } from "../dtos/index.js";
+import { ITokenService, TokenPayload } from "../services/index.js";
+import { LoginDto } from "../dtos/index.js";
+import { InvalidCredentialsError, UserNotFoundError } from "../../domain/errors/index.js";
 
 interface LoginResponse {
     user: UserResponseDto;

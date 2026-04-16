@@ -7,6 +7,7 @@ export const env = {
     dataBaseUrl: process.env.DATABASE_URL!,
     jwtSecret: process.env.JWT_SECRET!,
     jwtExpiresIn: (process.env.JWT_EXPIRES_IN || '24h') as SignOptions['expiresIn'],
+    frontendUrl: process.env.FRONTEND_URL,
 }
 
 if (!env.dataBaseUrl) {

@@ -1,2 +1,2 @@
-export * from './LoginUserUseCase';
-export * from './RegisterUserUseCase';
+export * from './LoginUserUseCase.js';
+export * from './RegisterUserUseCase.js';

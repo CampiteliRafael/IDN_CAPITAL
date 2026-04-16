@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import { DomainError, UserAlreadyExistsError, UserNotFoundError, InvalidCredentialsError, InvalidTokenError } from "../../domain/errors";
+import { DomainError, UserAlreadyExistsError, UserNotFoundError, InvalidCredentialsError, InvalidTokenError } from "../../domain/errors/index.js";
 
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
     console.error('Error:', error);

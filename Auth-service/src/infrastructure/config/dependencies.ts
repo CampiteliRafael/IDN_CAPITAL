@@ -1,9 +1,9 @@
-import { prisma } from '../database/prisma-client';
-import { PrismaUserRepository } from '../repositories/PrismaUserRepository';
-import { BcryptHashService } from '../../application/services';
-import { JwtTokenService } from '../../application/services';
-import { env } from '../config/env';
-import { RegisterUserUseCase, LoginUserUseCase } from '../../application/use-cases';
+import { prisma } from '../database/prisma-client.js';
+import { PrismaUserRepository } from '../repositories/PrismaUserRepository.js';
+import { BcryptHashService } from '../../application/services/index.js';
+import { JwtTokenService } from '../../application/services/index.js';
+import { env } from '../config/env.js';
+import { RegisterUserUseCase, LoginUserUseCase } from '../../application/use-cases/index.js';
 
 
 export const userRepository = new PrismaUserRepository(prisma);
