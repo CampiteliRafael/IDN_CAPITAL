@@ -3,29 +3,28 @@ import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-})
+  connectionString: process.env.DATABASE_URL,
+});
 
 const adapter = new PrismaPg(pool);
 
 const prismaSingleton = () => {
-    return new PrismaClient({
-        adapter,
-        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    })
-}
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
+};
 
 declare global {
-    var prismaGlobal: undefined | ReturnType<typeof prismaSingleton>;
+  var prismaGlobal: undefined | ReturnType<typeof prismaSingleton>;
 }
 
 export const prisma = globalThis.prismaGlobal ?? prismaSingleton();
 
 if (process.env.NODE_ENV !== 'production') {
-    globalThis.prismaGlobal = prisma;
-};
+  globalThis.prismaGlobal = prisma;
+}
 
 process.on('beforeExit', async () => {
-    await prisma.$disconnect();
+  await prisma.$disconnect();
 });
-

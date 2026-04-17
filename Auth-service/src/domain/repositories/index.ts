@@ -1,1 +1,1 @@
-export * from "./IUserRepository.js";
+export * from './IUserRepository.js';

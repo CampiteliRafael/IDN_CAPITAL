@@ -24,17 +24,17 @@ export default function LoginPage() {
   }, [isAuthenticated, router]);
 
   useEffect(() => {
-    if(error) {
+    if (error) {
       dispatch(clearError());
     }
   }, [email, password]);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!email || !password) return;
+    if (!email || !password) return;
     try {
       await dispatch(loginThunk({ email, password })).unwrap();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -128,7 +128,7 @@ export default function LoginPage() {
             size="lg"
             className="w-full cursor-pointer"
           >
-            {loading? 'Entrando...' : 'Entrar'}
+            {loading ? 'Entrando...' : 'Entrar'}
           </Button>
 
           <p className="mt-6 text-center text-sm text-white/80">

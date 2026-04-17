@@ -1,7 +1,7 @@
-import { DomainError } from "./DomainError.js";
+import { DomainError } from './DomainError.js';
 
 export class InvalidCredentialsError extends DomainError {
-    constructor() {
-        super(`Invalid credentials provided.`);
-    }
+  constructor() {
+    super(`Invalid credentials provided.`);
+  }
 }

@@ -3,23 +3,23 @@ import { TokenPayload, ITokenService } from './interfaces/ITokenService.js';
 import { InvalidTokenError } from '../../domain/errors/index.js';
 
 export class JwtTokenService implements ITokenService {
-    private secretKey: string
-    private expiresIn: SignOptions['expiresIn']
+  private secretKey: string;
+  private expiresIn: SignOptions['expiresIn'];
 
-    constructor(secretKey: string, expiresIn: SignOptions['expiresIn'] = '24h') {
-        this.secretKey = secretKey;
-        this.expiresIn = expiresIn;
-    }
+  constructor(secretKey: string, expiresIn: SignOptions['expiresIn'] = '24h') {
+    this.secretKey = secretKey;
+    this.expiresIn = expiresIn;
+  }
 
-    async generateToken(payload: TokenPayload): Promise<string> {
-        return jsonwebtoken.sign(payload, this.secretKey, { expiresIn: this.expiresIn });
-    }
+  async generateToken(payload: TokenPayload): Promise<string> {
+    return jsonwebtoken.sign(payload, this.secretKey, { expiresIn: this.expiresIn });
+  }
 
-    async verifyToken(token: string): Promise<TokenPayload> {
-        try {
-            return jsonwebtoken.verify(token, this.secretKey) as TokenPayload;
-        } catch (error) {
-            throw new InvalidTokenError();
-        }
+  async verifyToken(token: string): Promise<TokenPayload> {
+    try {
+      return jsonwebtoken.verify(token, this.secretKey) as TokenPayload;
+    } catch (_error) {
+      throw new InvalidTokenError();
     }
+  }
 }
