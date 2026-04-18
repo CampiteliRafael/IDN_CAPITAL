@@ -6,11 +6,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector, clearError, registerThunk } from '@/lib/store';
 
-
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('')
+  const [name, setName] = useState('');
 
   const router = useRouter();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
@@ -34,12 +33,11 @@ export default function RegisterPage() {
     if (!email || !password || !name) return;
     try {
       await dispatch(registerThunk({ email, password, name })).unwrap();
-    } catch (error) { }
+    } catch (_error) {}
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 pt-30 pb-10">
-
       <Image
         src="/herosection1.png"
         alt="Background"
@@ -52,21 +50,17 @@ export default function RegisterPage() {
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
 
       <div className="relative z-20 w-full max-w-md">
-
-        <form className="bg-moss-light/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gold-light/20" onSubmit={handleSubmit}>
-
-          <h2 className="text-3xl font-bold mb-2 text-center text-gold-light">
-            Bem-vindo
-          </h2>
+        <form
+          className="bg-moss-light/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gold-light/20"
+          onSubmit={handleSubmit}
+        >
+          <h2 className="text-3xl font-bold mb-2 text-center text-gold-light">Bem-vindo</h2>
           <p className="text-center text-white/80 mb-8 text-sm">
             Faça seu registro para acessar sua conta e aproveitar nossos serviços exclusivos!
           </p>
 
           <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-white mb-2"
-            >
+            <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
               Nome
             </label>
             <input
@@ -85,10 +79,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-white mb-2"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
               Email
             </label>
             <input
@@ -107,10 +98,7 @@ export default function RegisterPage() {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-white mb-2"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
               Senha
             </label>
             <input
@@ -159,7 +147,6 @@ export default function RegisterPage() {
             </Link>
           </p>
         </form>
-
       </div>
     </div>
   );

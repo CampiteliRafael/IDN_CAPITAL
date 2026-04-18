@@ -6,10 +6,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector, loginThunk, clearError } from '@/lib/store';
 
-
 export default function LoginPage() {
-
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -34,12 +31,11 @@ export default function LoginPage() {
     if (!email || !password) return;
     try {
       await dispatch(loginThunk({ email, password })).unwrap();
-    } catch (error) { }
+    } catch (_error) {}
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 pt-30 pb-10">
-
       <Image
         src="/herosection1.png"
         alt="Background"
@@ -52,9 +48,10 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
 
       <div className="relative z-20 w-full max-w-md">
-
-        <form className="bg-moss-light/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gold-light/20" onSubmit={handleSubmit}>
-
+        <form
+          className="bg-moss-light/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gold-light/20"
+          onSubmit={handleSubmit}
+        >
           <h2 className="text-3xl font-bold mb-2 text-center text-gold-light">
             Bem-vindo de volta
           </h2>
@@ -63,10 +60,7 @@ export default function LoginPage() {
           </p>
 
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-white mb-2"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
               Email
             </label>
             <input
@@ -85,10 +79,7 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-white mb-2"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
               Senha
             </label>
             <input
@@ -146,7 +137,6 @@ export default function LoginPage() {
             </Link>
           </p>
         </form>
-
       </div>
     </div>
   );
