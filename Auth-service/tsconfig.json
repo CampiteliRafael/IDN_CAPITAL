@@ -12,7 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": ["jest", "node"]
   },
   "ts-node": {
     "esm": true,
@@ -24,6 +25,5 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/*.test.ts"
-  ]
+  ],
 }
