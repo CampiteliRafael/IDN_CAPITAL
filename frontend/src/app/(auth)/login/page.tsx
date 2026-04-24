@@ -42,7 +42,7 @@ export default function LoginPage() {
         fill
         className="object-cover"
         priority
-        quality={90}
+        quality={75}
       />
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
@@ -80,7 +80,7 @@ export default function LoginPage() {
 
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-              Senha
+              Password
             </label>
             <input
               value={password}
@@ -113,6 +113,7 @@ export default function LoginPage() {
           </div>
 
           <Button
+            aria-label="entrar"
             type="submit"
             variant="secondary"
             disabled={loading}
