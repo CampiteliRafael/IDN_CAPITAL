@@ -44,7 +44,7 @@ export default function RegisterPage() {
         fill
         className="object-cover"
         priority
-        quality={90}
+        quality={75}
       />
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>

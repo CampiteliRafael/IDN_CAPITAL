@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import LoginPage from '../page';
 import { useAppDispatch, useAppSelector, loginThunk, clearError } from '@/lib/store';
 import { useRouter } from 'next/navigation';
