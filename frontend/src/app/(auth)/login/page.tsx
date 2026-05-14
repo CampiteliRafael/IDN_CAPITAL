@@ -20,13 +20,7 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  useEffect(() => {
-    if (error) {
-      dispatch(clearError());
-    }
-  }, [email, password]);
-
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) return;
     try {
@@ -65,7 +59,10 @@ export default function LoginPage() {
             </label>
             <input
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) dispatch(clearError());
+              }}
               disabled={loading}
               type="email"
               id="email"
@@ -84,7 +81,10 @@ export default function LoginPage() {
             </label>
             <input
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) dispatch(clearError());
+              }}
               disabled={loading}
               type="password"
               id="password"

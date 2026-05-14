@@ -142,7 +142,6 @@ describe('RegisterPage integration', () => {
     (authService.register as jest.Mock).mockRejectedValue(axiosError);
     const { user } = renderWithProviders(<RegisterPage />);
 
-    // 1. Provoca o erro
     await user.type(screen.getByLabelText(/nome/i), 'João');
     await user.type(screen.getByLabelText(/email/i), 'teste@teste.com');
     await user.type(screen.getByLabelText(/senha/i), '123456');

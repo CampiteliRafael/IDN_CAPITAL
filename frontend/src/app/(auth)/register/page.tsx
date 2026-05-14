@@ -22,13 +22,7 @@ export default function RegisterPage() {
     }
   }, [isAuthenticated, router]);
 
-  useEffect(() => {
-    if (error) {
-      dispatch(clearError());
-    }
-  }, [email, password]);
-
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password || !name) return;
     try {
@@ -65,7 +59,10 @@ export default function RegisterPage() {
             </label>
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (error) dispatch(clearError());
+              }}
               type="text"
               disabled={loading}
               id="name"
@@ -84,7 +81,10 @@ export default function RegisterPage() {
             </label>
             <input
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) dispatch(clearError());
+              }}
               type="email"
               disabled={loading}
               id="email"
@@ -103,7 +103,10 @@ export default function RegisterPage() {
             </label>
             <input
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (error) dispatch(clearError());
+              }}
               type="password"
               id="password"
               disabled={loading}
