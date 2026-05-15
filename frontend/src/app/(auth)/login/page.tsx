@@ -5,10 +5,13 @@ import Button from '@/app/components/ui/Button';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector, loginThunk, clearError } from '@/lib/store';
+import { LoginSchema } from '@/lib/validations/auth';
+import z from 'zod';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -22,10 +25,20 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password) return;
+
+    const result = LoginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const errors = z.flattenError(result.error).fieldErrors;
+      setFieldErrors({
+        email: errors.email?.[0],
+        password: errors.password?.[0],
+      });
+      return;
+    }
+    setFieldErrors({});
     try {
       await dispatch(loginThunk({ email, password })).unwrap();
-    } catch (_error) {}
+    } catch (_error) { }
   };
 
   return (
@@ -62,6 +75,7 @@ export default function LoginPage() {
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (error) dispatch(clearError());
+                if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
               }}
               disabled={loading}
               type="email"
@@ -73,6 +87,7 @@ export default function LoginPage() {
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="seu@email.com"
             />
+            {fieldErrors.email && <p className="mt-1 text-sm text-red-300">{fieldErrors.email}</p>}
           </div>
 
           <div className="mb-4">
@@ -84,6 +99,8 @@ export default function LoginPage() {
               onChange={(e) => {
                 setPassword(e.target.value);
                 if (error) dispatch(clearError());
+                if (fieldErrors.password)
+                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
               }}
               disabled={loading}
               type="password"
@@ -95,6 +112,9 @@ export default function LoginPage() {
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="••••••••"
             />
+            {fieldErrors.password && (
+              <p className="mt-1 text-sm text-red-300">{fieldErrors.password}</p>
+            )}
           </div>
 
           {error && (

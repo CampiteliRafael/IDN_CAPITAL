@@ -5,11 +5,18 @@ import Button from '@/app/components/ui/Button';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector, clearError, registerThunk } from '@/lib/store';
+import { RegisterSchema } from '@/lib/validations/auth';
+import z from 'zod';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
   const router = useRouter();
   const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
@@ -24,7 +31,18 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password || !name) return;
+    const result = RegisterSchema.safeParse({ name, email, password });
+
+    if (!result.success) {
+      const errors = z.flattenError(result.error).fieldErrors;
+      setFieldErrors({
+        name: errors.name?.[0],
+        email: errors.email?.[0],
+        password: errors.password?.[0],
+      });
+      return;
+    }
+    setFieldErrors({});
     try {
       await dispatch(registerThunk({ email, password, name })).unwrap();
     } catch (_error) {}
@@ -62,6 +80,7 @@ export default function RegisterPage() {
               onChange={(e) => {
                 setName(e.target.value);
                 if (error) dispatch(clearError());
+                if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
               }}
               type="text"
               disabled={loading}
@@ -73,6 +92,7 @@ export default function RegisterPage() {
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="Seu Nome"
             />
+            {fieldErrors.name && <p className="mt-1 text-sm text-red-300">{fieldErrors.name}</p>}
           </div>
 
           <div className="mb-4">
@@ -84,6 +104,7 @@ export default function RegisterPage() {
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (error) dispatch(clearError());
+                if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
               }}
               type="email"
               disabled={loading}
@@ -95,6 +116,7 @@ export default function RegisterPage() {
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="seu@email.com"
             />
+            {fieldErrors.email && <p className="mt-1 text-sm text-red-300">{fieldErrors.email}</p>}
           </div>
 
           <div className="mb-4">
@@ -106,6 +128,8 @@ export default function RegisterPage() {
               onChange={(e) => {
                 setPassword(e.target.value);
                 if (error) dispatch(clearError());
+                if (fieldErrors.password)
+                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
               }}
               type="password"
               id="password"
@@ -117,6 +141,9 @@ export default function RegisterPage() {
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="••••••••"
             />
+            {fieldErrors.password && (
+              <p className="mt-1 text-sm text-red-300">{fieldErrors.password}</p>
+            )}
           </div>
 
           {error && (
