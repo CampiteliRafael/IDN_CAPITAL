@@ -2,26 +2,18 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/app/components/ui/Button';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppDispatch, useAppSelector, loginThunk, clearError } from '@/lib/store';
+import { useState } from 'react';
 import { LoginSchema } from '@/lib/validations/auth';
-import z from 'zod';
+import { z } from 'zod';
+import { useAuth, useRequireAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/dashboard');
-    }
-  }, [isAuthenticated, router]);
+  const { loading, error, login, clearError } = useAuth();
+  useRequireAuth();
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,8 +29,8 @@ export default function LoginPage() {
     }
     setFieldErrors({});
     try {
-      await dispatch(loginThunk({ email, password })).unwrap();
-    } catch (_error) { }
+      await login({ email, password }).unwrap();
+    } catch (_error) {}
   };
 
   return (
@@ -74,7 +66,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                if (error) dispatch(clearError());
+                if (error) clearError();
                 if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
               }}
               disabled={loading}
@@ -98,7 +90,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (error) dispatch(clearError());
+                if (error) clearError();
                 if (fieldErrors.password)
                   setFieldErrors((prev) => ({ ...prev, password: undefined }));
               }}

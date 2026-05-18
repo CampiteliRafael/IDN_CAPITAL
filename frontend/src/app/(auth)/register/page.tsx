@@ -2,11 +2,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/app/components/ui/Button';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppDispatch, useAppSelector, clearError, registerThunk } from '@/lib/store';
+import { useState } from 'react';
 import { RegisterSchema } from '@/lib/validations/auth';
-import z from 'zod';
+import { z } from 'zod';
+import { useAuth, useRequireAuth } from '@/hooks/useAuth';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -18,16 +17,8 @@ export default function RegisterPage() {
     password?: string;
   }>({});
 
-  const router = useRouter();
-  const { loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/dashboard');
-    }
-  }, [isAuthenticated, router]);
+  const { loading, error, clearError, register } = useAuth();
+  useRequireAuth();
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +35,7 @@ export default function RegisterPage() {
     }
     setFieldErrors({});
     try {
-      await dispatch(registerThunk({ email, password, name })).unwrap();
+      await register({ email, password, name }).unwrap();
     } catch (_error) {}
   };
 
@@ -79,7 +70,7 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
-                if (error) dispatch(clearError());
+                if (error) clearError();
                 if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
               }}
               type="text"
@@ -103,7 +94,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                if (error) dispatch(clearError());
+                if (error) clearError();
                 if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
               }}
               type="email"
@@ -127,7 +118,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
-                if (error) dispatch(clearError());
+                if (error) clearError();
                 if (fieldErrors.password)
                   setFieldErrors((prev) => ({ ...prev, password: undefined }));
               }}
