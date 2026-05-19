@@ -9,6 +9,7 @@ import {
 import type { LoginDto, RegisterDto } from '@/lib/validations/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { ROUTES } from '@/constants/routes';
 
 export function useAuth() {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ export function useAuth() {
   };
 }
 
-export function useRequireAuth(redirectTo = '/dashboard') {
+export function useRequireAuth(redirectTo = ROUTES.DASHBOARD) {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 

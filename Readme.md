@@ -1,6 +1,6 @@
 # IDN CAPITAL APP
 
-> Plataforma completa para estudo, visualização, negociação e gerenciamento de ativos financeiros
+> Plataforma financeira inteligente para gestão de ativos, conciliação automatizada de pagamentos e análise de portfólios com IA
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -9,25 +9,34 @@
 
 ## 📋 Sobre o Projeto
 
-O **IDN Capital App** é uma aplicação moderna e escalável desenvolvida com arquitetura de microservices, projetada para oferecer uma experiência completa no mercado financeiro. A plataforma permite que usuários estudem, visualizem dados em tempo real, realizem operações e gerenciem seus portfólios de investimentos de forma intuitiva e segura.
+O **IDN Capital App** é uma plataforma moderna e escalável desenvolvida com arquitetura de microservices, projetada para oferecer uma experiência completa no mercado financeiro. Além de visualização de ativos e gerenciamento de portfólios, a plataforma conta com um sistema inteligente de conciliação financeira que utiliza IA (LLM Vision) para validar comprovantes de pagamento, detectar fraudes e processar transações de forma assíncrona.
 
-Este aplicativo permite que os usuários analisem dados financeiros, visualizem gráficos de ativos e realizem negociações em tempo real, facilitando a gestão e o acompanhamento de investimentos.
+Este projeto resolve um problema real de negócio: empresas perdem tempo e dinheiro analisando comprovantes manualmente e lidando com fraudes. O sistema automatiza esse processo utilizando filas de mensagens, workers assíncronos e modelos de linguagem multimodais.
 
 ### 🎯 Objetivos
 
 - Proporcionar visualização de dados financeiros em tempo real
 - Oferecer ferramentas de análise técnica e fundamentalista
-- Permitir simulação e backtesting de estratégias
+- Automatizar a conciliação e validação de comprovantes de pagamento com IA
+- Detectar transações fraudulentas antes que causem impacto financeiro
 - Facilitar o gerenciamento de portfólios diversificados
 - Garantir segurança e confiabilidade nas operações
 
 ## ✨ Recursos Principais
+
+### 🤖 Conciliação Inteligente com IA
+- ✔ Upload de comprovantes de pagamento (PDF/Imagem) com drag-and-drop
+- ✔ Extração automática de dados (valor, data, banco, CNPJ) via LLM Vision
+- ✔ Detecção de fraudes com análise de autenticidade do comprovante
+- ✔ Atualização de status em tempo real via WebSocket (`pending → processing → approved/fraud`)
+- ✔ Histórico completo de transações analisadas com auditoria
 
 ### 📊 Análise e Visualização
 - ✔ Análise de dados financeiros em tempo real
 - ✔ Gráficos interativos para visualização de ativos financeiros
 - ✔ Indicadores técnicos (médias móveis, RSI, MACD, Bollinger Bands)
 - ✔ Candlesticks, linha, área e outros tipos de gráficos
+- ✔ Dashboard financeiro com métricas: total faturado, fraudes detectadas, transações pendentes
 - ✔ Dados em tempo real via WebSocket
 
 ### 💼 Gerenciamento
@@ -38,8 +47,8 @@ Este aplicativo permite que os usuários analisem dados financeiros, visualizem 
 - ✔ Histórico completo de operações
 
 ### 🔐 Segurança e Experiência
-- ✔ Segurança de dados e criptografia para proteção de informações financeiras
 - ✔ Autenticação JWT e autorização baseada em roles
+- ✔ Segurança de dados e criptografia para proteção de informações financeiras
 - ✔ Suporte a dispositivos móveis para acesso a qualquer hora e em qualquer lugar
 - ✔ Opções de personalização de interface do usuário
 - ✔ Documentação abrangente
@@ -55,7 +64,7 @@ Este aplicativo permite que os usuários analisem dados financeiros, visualizem 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                         FRONTEND                             │
-│              (React + TypeScript + TailwindCSS)             │
+│         (Next.js + React + TypeScript + TailwindCSS)        │
 └─────────────────────────────────────────────────────────────┘
                               │
                               │ HTTPS/WSS
@@ -69,14 +78,27 @@ Este aplicativo permite que os usuários analisem dados financeiros, visualizem 
           │                   │                   │
           ▼                   ▼                   ▼
 ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
-│  Auth Service    │ │ Market Data      │ │  Portfolio       │
-│  (Node.js)       │ │  Service         │ │  Service         │
-│  Port: 3001      │ │  (Node.js)       │ │  (Node.js)       │
+│  Auth Service    │ │ Billing Service  │ │  Market Data     │
+│  (Node.js)       │ │  (Node.js)       │ │  Service         │
+│  Port: 3001      │ │  Port: 3002      │ │  (Node.js)       │
 └──────────────────┘ └──────────────────┘ └──────────────────┘
+                              │
+                    ┌─────────┴─────────┐
+                    │  BullMQ Queues    │
+                    │  (Redis)          │
+                    └─────────┬─────────┘
+                              │
+               ┌──────────────┴──────────────┐
+               ▼                             ▼
+    ┌──────────────────┐         ┌──────────────────┐
+    │   AI Worker      │         │  Notification    │
+    │  (LLM Vision)    │         │  Worker          │
+    │  Gemini/GPT-4o   │         │  (Nodemailer)    │
+    └──────────────────┘         └──────────────────┘
           │                   │                   │
           ▼                   ▼                   ▼
 ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
-│  Trading         │ │  Analytics       │ │  Notification    │
+│  Portfolio       │ │  Analytics       │ │  Notification    │
 │  Service         │ │  Service         │ │  Service         │
 │  (Node.js)       │ │  (Python)        │ │  (Node.js)       │
 └──────────────────┘ └──────────────────┘ └──────────────────┘
@@ -87,115 +109,114 @@ Este aplicativo permite que os usuários analisem dados financeiros, visualizem 
                     │                   │
                     ▼                   ▼
           ┌──────────────────┐ ┌──────────────────┐
-          │   PostgreSQL     │ │   Redis Cache    │
-          │   (Dados         │ │   (Sessions &    │
-          │   Relacionais)   │ │   Real-time)     │
+          │   PostgreSQL     │ │   Redis          │
+          │   (Dados         │ │   (Sessions,     │
+          │   Relacionais)   │ │   Cache & Queues)│
           └──────────────────┘ └──────────────────┘
-                    │
-                    ▼
-          ┌──────────────────┐
-          │   RabbitMQ       │
-          │   (Message       │
-          │   Broker)        │
-          └──────────────────┘
+```
+
+### Fluxo de Conciliação com IA
+
+```
+Upload do          Billing          BullMQ          AI Worker
+Comprovante   →   Service     →    Queue      →   (LLM Vision)
+(Frontend)        (salva +          Redis          Extrai dados +
+                  enfileira)                       valida fraude
+                                                        │
+                                                        ▼
+                  Frontend    ←   WebSocket   ←   Atualiza status
+                  (tempo real)    (Socket.io)     no banco + notifica
 ```
 
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
-- **Framework:** React 18+ com Next.js 14
+- **Framework:** Next.js 16 + React 19
 - **Linguagem:** TypeScript 5+
-- **Estilização:** TailwindCSS 3+
-- **Gráficos:** TradingView Lightweight Charts / Recharts
-- **State Management:** Zustand / Redux Toolkit
-- **HTTP Client:** Axios
+- **Estilização:** TailwindCSS 4+
+- **Gráficos:** Recharts / Tremor
+- **State Management:** Redux Toolkit
+- **HTTP Client:** Axios + TanStack Query
 - **WebSocket:** Socket.io-client
-- **Forms:** React Hook Form + Zod
-- **Testing:** Jest + React Testing Library + Cypress
+- **Forms/Validation:** Zod
+- **Testing:** Jest + React Testing Library
 
 ### Backend (Microservices)
-- **Runtime:** Node.js 20+ / Python 3.11+
-- **Framework:** Express.js / Fastify / FastAPI
-- **Linguagem:** TypeScript / Python
-- **Authentication:** JWT + Passport.js
-- **ORM:** Prisma / TypeORM / SQLAlchemy
-- **Validation:** Zod / Joi / Pydantic
+- **Runtime:** Node.js 20+
+- **Framework:** Express 5
+- **Linguagem:** TypeScript
+- **Authentication:** JWT + Bcrypt
+- **ORM:** Prisma + PostgreSQL
+- **Validation:** Zod
+- **File Upload:** Multer
+- **Message Queue:** BullMQ (Redis)
+- **WebSocket:** Socket.io
+- **Email:** Nodemailer
 - **API Documentation:** Swagger / OpenAPI
-- **Testing:** Jest / Vitest / Pytest
+- **Testing:** Jest
+
+### Inteligência Artificial
+- **LLM Vision:** Google Gemini / OpenAI GPT-4o
+- **Casos de uso:** Extração de dados de comprovantes, detecção de fraudes
+- **Integração:** Workers assíncronos via BullMQ
 
 ### Infraestrutura
 - **Containerização:** Docker + Docker Compose
 - **API Gateway:** NGINX / Kong
-- **Message Broker:** RabbitMQ / Apache Kafka
-- **Cache:** Redis
+- **Message Queue:** BullMQ com Redis
+- **Cache & Sessions:** Redis
 - **Banco de Dados:** PostgreSQL 15+
 - **Monitoramento:** Prometheus + Grafana
 - **Logs:** ELK Stack (Elasticsearch, Logstash, Kibana)
 
 ### DevOps
-- **CI/CD:** GitHub Actions / GitLab CI
+- **CI/CD:** GitHub Actions
 - **Versionamento:** Git + Conventional Commits
-- **Code Quality:** ESLint, Prettier, SonarQube
+- **Code Quality:** ESLint, Prettier
 - **Containers:** Docker Hub / GHCR
 
 ## 📁 Estrutura do Projeto
 
 ```
 idn_capital/
-├── Frontend/                    # Aplicação React/Next.js
+├── frontend/                       # Aplicação Next.js
 │   ├── src/
-│   │   ├── components/         # Componentes reutilizáveis
-│   │   ├── pages/              # Páginas da aplicação
-│   │   ├── hooks/              # Custom hooks
-│   │   ├── services/           # Serviços e APIs
-│   │   ├── store/              # Estado global
-│   │   ├── utils/              # Funções utilitárias
-│   │   └── types/              # Tipos TypeScript
-│   ├── public/                 # Arquivos estáticos
-│   ├── tests/                  # Testes E2E e unitários
+│   │   ├── app/                   # App Router (Next.js)
+│   │   │   ├── (auth)/            # Rotas de autenticação
+│   │   │   ├── (dashboard)/       # Painel principal
+│   │   │   └── components/        # Componentes reutilizáveis
+│   │   ├── hooks/                 # Custom hooks
+│   │   ├── lib/                   # Store, API client, tipos
+│   │   ├── constants/             # Rotas e constantes
+│   │   └── utils/                 # Funções utilitárias
+│   ├── Dockerfile
 │   └── package.json
 │
-├── Microservices/              # Backend em microservices
-│   ├── auth-service/           # Autenticação e autorização
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   │
-│   ├── market-data-service/    # Dados de mercado em tempo real
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   │
-│   ├── portfolio-service/      # Gerenciamento de carteiras
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   │
-│   ├── trading-service/        # Execução de ordens
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   │
-│   ├── analytics-service/      # Análises e relatórios
-│   │   ├── src/
-│   │   ├── tests/
-│   │   ├── Dockerfile
-│   │   └── requirements.txt
-│   │
-│   └── notification-service/   # Alertas e notificações
-│       ├── src/
-│       ├── tests/
-│       ├── Dockerfile
-│       └── package.json
+├── Auth-service/                   # Autenticação e autorização
+│   ├── src/
+│   │   ├── domain/                # Entidades e interfaces
+│   │   ├── application/           # Use cases e DTOs
+│   │   ├── infrastructure/        # Prisma, Redis, config
+│   │   └── presentation/          # Controllers e rotas Express
+│   ├── prisma/
+│   ├── Dockerfile
+│   └── package.json
 │
-├── docker-compose.yml          # Orquestração de containers
-├── .env.example                # Variáveis de ambiente exemplo
+├── billing-service/                # Conciliação financeira com IA
+│   ├── src/
+│   │   ├── domain/                # Transaction, Fraud entities
+│   │   ├── application/           # Use cases e DTOs
+│   │   ├── infrastructure/        # Prisma, BullMQ queues, Multer
+│   │   │   ├── queues/            # ai-processing, notifications queues
+│   │   │   └── workers/           # AI worker, notification worker
+│   │   └── presentation/          # Controllers, rotas, Socket.io
+│   ├── prisma/
+│   ├── Dockerfile
+│   └── package.json
+│
+├── docker-compose.yaml             # Orquestração de containers
+├── .env.example                    # Variáveis de ambiente exemplo
 ├── .gitignore
-├── LICENSE
 └── README.md
 ```
 
@@ -235,7 +256,7 @@ Este projeto foi desenvolvido seguindo os princípios fundamentais de engenharia
 #### Microservices Architecture
 ```
 - Separação por domínio de negócio
-- Comunicação via REST APIs e Message Broker
+- Comunicação via REST APIs e BullMQ (Redis)
 - Banco de dados por serviço (Database per Service)
 - Circuit Breaker para resiliência
 - Service Discovery e API Gateway
@@ -249,13 +270,13 @@ Este projeto foi desenvolvido seguindo os princípios fundamentais de engenharia
 - **Singleton Pattern:** Conexões de banco de dados e cache
 
 **Estruturais:**
-- **Adapter Pattern:** Integração com diferentes APIs de mercado
+- **Adapter Pattern:** Integração com APIs de mercado e provedores de IA
 - **Decorator Pattern:** Middlewares de autenticação e logging
 - **Facade Pattern:** Simplificação de operações complexas
 
 **Comportamentais:**
-- **Observer Pattern:** Sistema de notificações e alertas
-- **Strategy Pattern:** Diferentes algoritmos de análise técnica
+- **Observer Pattern:** Sistema de notificações e alertas em tempo real
+- **Strategy Pattern:** Diferentes algoritmos de análise técnica e validação de fraudes
 - **Chain of Responsibility:** Pipeline de validações
 - **Command Pattern:** Sistema de ordens de trading
 
@@ -270,86 +291,31 @@ Cada microservice utiliza DI manual para:
 
 ### Arquitetura em Camadas
 
-Cada microservice segue a **Clean Architecture / Hexagonal Architecture**:
+Cada microservice segue a **Clean Architecture**:
 
 ```
 src/
 ├── domain/                 # Camada de Domínio (Entities, Value Objects)
 │   ├── entities/          # Entidades de negócio
 │   ├── repositories/      # Interfaces de repositórios
-│   └── services/          # Lógica de negócio pura
+│   └── errors/            # Erros de domínio customizados
 │
 ├── application/           # Camada de Aplicação (Use Cases)
 │   ├── dtos/             # Data Transfer Objects
 │   ├── use-cases/        # Casos de uso da aplicação
-│   └── services/         # Serviços de aplicação
+│   └── services/         # Interfaces de serviços externos
 │
 ├── infrastructure/        # Camada de Infraestrutura
-│   ├── database/         # Configuração e migrations
+│   ├── database/         # Prisma client
 │   ├── repositories/     # Implementação dos repositórios
-│   ├── external/         # Integrações externas
-│   └── messaging/        # RabbitMQ, eventos
+│   ├── queues/           # BullMQ producers e consumers
+│   └── config/           # Injeção de dependências
 │
 └── presentation/          # Camada de Apresentação
     ├── controllers/      # Controllers HTTP
     ├── middlewares/      # Middlewares Express
-    ├── routes/           # Definição de rotas
-    └── validators/       # Validações de entrada
+    └── routes/           # Definição de rotas
 ```
-
-### Programação Orientada a Objetos (POO)
-
-**Encapsulamento:**
-- Propriedades privadas e públicas bem definidas
-- Getters/Setters quando necessário
-- Imutabilidade onde apropriado
-
-**Herança:**
-- Classes base para comportamentos comuns
-- Abstract classes para contratos
-- Preferência por composição sobre herança
-
-**Polimorfismo:**
-- Interfaces para diferentes implementações
-- Method overriding quando necessário
-- Duck typing com TypeScript
-
-**Abstração:**
-- Interfaces bem definidas
-- Ocultar complexidade de implementação
-- Expor apenas o necessário
-
-### Outros Princípios
-
-**DRY (Don't Repeat Yourself):**
-- Utilitários compartilhados
-- Componentes reutilizáveis
-- Helpers e funções genéricas
-
-**KISS (Keep It Simple, Stupid):**
-- Soluções simples e diretas
-- Evitar over-engineering
-- Código legível e manutenível
-
-**YAGNI (You Aren't Gonna Need It):**
-- Implementar apenas o necessário
-- Evitar código especulativo
-- Refatorar quando necessário
-
-**Separation of Concerns:**
-- Cada camada com responsabilidade específica
-- Módulos independentes
-- Baixo acoplamento, alta coesão
-
-### Qualidade de Código
-
-- **Code Reviews:** Obrigatórios em PRs
-- **Linting:** ESLint + Prettier
-- **Type Safety:** TypeScript strict mode
-- **Testing:** Cobertura mínima de 80%
-- **Documentation:** JSDoc/TSDoc para funções públicas
-- **CI/CD:** Pipelines automatizados
-- **Static Analysis:** SonarQube para detecção de code smells
 
 ### Tratamento de Erros
 
@@ -365,6 +331,7 @@ class DomainError extends Error {
 class ValidationError extends DomainError {}
 class NotFoundError extends DomainError {}
 class UnauthorizedError extends DomainError {}
+class FraudDetectedError extends DomainError {}
 
 // Middleware global de error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -375,28 +342,27 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 ```
 
-### Logging e Observabilidade
+### Qualidade de Código
 
-- **Structured Logging:** Winston com formato JSON
-- **Correlation IDs:** Rastreamento entre microservices
-- **Metrics:** Prometheus para métricas de negócio
-- **Tracing:** Distributed tracing com Jaeger
-- **Health Checks:** Endpoints de health em todos os serviços
+- **Linting:** ESLint + Prettier
+- **Type Safety:** TypeScript strict mode
+- **Testing:** Testes unitários e de integração com Jest
+- **CI/CD:** GitHub Actions rodando lint + testes a cada Push
+- **Conventional Commits:** Histórico de git semântico e legível
 
 ## 🚀 Começando
 
 ### Pré-requisitos
 
-- **Node.js** 20+ e npm/yarn/pnpm
+- **Node.js** 20+ e npm
 - **Docker** e Docker Compose
 - **Git**
-- **Python** 3.11+ (para analytics-service)
 
 ### Instalação
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/idn_capital.git
+git clone https://github.com/campitelirafael/idn_capital.git
 cd idn_capital
 ```
 
@@ -415,14 +381,21 @@ docker-compose up -d
 
 Frontend:
 ```bash
-cd Frontend
+cd frontend
 npm install
 npm run dev
 ```
 
-Backend (cada microservice):
+Auth Service:
 ```bash
-cd Microservices/auth-service
+cd Auth-service
+npm install
+npm run dev
+```
+
+Billing Service:
+```bash
+cd billing-service
 npm install
 npm run dev
 ```
@@ -430,8 +403,8 @@ npm run dev
 ### Acessando a Aplicação
 
 - **Frontend:** http://localhost:3000
-- **API Gateway:** http://localhost:8080
-- **Swagger Docs:** http://localhost:8080/api/docs
+- **Auth Service:** http://localhost:3001
+- **Billing Service:** http://localhost:3002
 
 ## 🔧 Variáveis de Ambiente
 
@@ -439,46 +412,52 @@ Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/idn_capital
+POSTGRES_USER=idn_user
+POSTGRES_PASSWORD=idn_password
+POSTGRES_DB=idn_capital
+
+# Redis
 REDIS_URL=redis://localhost:6379
 
 # JWT
 JWT_SECRET=your-super-secret-key
 JWT_EXPIRES_IN=7d
 
-# API Keys (Market Data)
-ALPHA_VANTAGE_API_KEY=your-api-key
-POLYGON_API_KEY=your-api-key
-
-# RabbitMQ
-RABBITMQ_URL=amqp://guest:guest@localhost:5672
+# AI Provider (escolha um)
+GEMINI_API_KEY=your-gemini-api-key
+OPENAI_API_KEY=your-openai-api-key
 
 # Email (Notifications)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-password
+SMTP_PASS=your-app-password
 
-# Environment
+# URLs
+FRONTEND_URL=http://localhost:3000
 NODE_ENV=development
-PORT=3000
 ```
 
 ## 🧪 Testes
 
 ### Frontend
 ```bash
-cd Frontend
+cd frontend
 npm run test              # Testes unitários
-npm run test:e2e          # Testes E2E com Cypress
 npm run test:coverage     # Coverage report
 ```
 
-### Backend
+### Auth Service
 ```bash
-cd Microservices/auth-service
+cd Auth-service
 npm run test              # Testes unitários
-npm run test:integration  # Testes de integração
+npm run test:coverage     # Coverage report
+```
+
+### Billing Service
+```bash
+cd billing-service
+npm run test              # Testes unitários
 npm run test:coverage     # Coverage report
 ```
 
@@ -488,59 +467,59 @@ npm run test:coverage     # Coverage report
 
 Frontend:
 ```bash
-cd Frontend
+cd frontend
 npm run build
 npm run start
 ```
 
-Docker:
+Docker (todos os serviços):
 ```bash
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose up --build -d
 ```
 
-### Deploy
+### CI/CD
 
-O projeto está configurado para CI/CD automático via GitHub Actions:
-- Push para `develop` → Deploy em ambiente de staging
-- Push para `main` → Deploy em produção
+O projeto está configurado com GitHub Actions:
+- A cada Push → ESLint + testes automatizados em todos os serviços
+- Push para `main` → Build e validação de qualidade
 
 ## 🗺️ Roadmap
 
-### Fase 1 - MVP (Q1 2026) ✅
-- [x] Estrutura inicial do projeto
-- [ ] Setup dos microservices básicos
-- [ ] Interface de visualização de mercado
-- [ ] Sistema de autenticação
-- [ ] Gerenciamento básico de portfólio
+### Fase 1 - Fundação (Q1 2026) ✅
+- [x] Estrutura de microservices com Docker Compose
+- [x] Auth Service com Clean Architecture (JWT + Bcrypt + Prisma)
+- [x] Frontend com Next.js, autenticação e middleware de rotas
+- [x] Testes unitários e de integração
+- [x] Configuração de ESLint, Prettier e TypeScript strict
 
-### Fase 2 - Core Features (Q2 2026)
+### Fase 2 - Conciliação com IA (Q2 2026)
+- [ ] Billing Service com upload de comprovantes
+- [ ] Integração BullMQ + Redis para filas assíncronas
+- [ ] AI Worker com Google Gemini / GPT-4o Vision
+- [ ] Detecção de fraudes automatizada
+- [ ] WebSocket para status em tempo real
+- [ ] Dashboard financeiro com Recharts
+- [ ] Notification Worker com Nodemailer
+- [ ] GitHub Actions CI/CD
+
+### Fase 3 - Mercado e Portfólio (Q3 2026)
 - [ ] Integração com APIs de mercado real
 - [ ] Sistema de trading (paper trading)
-- [ ] Notificações e alertas
-- [ ] Dashboard analítico
-- [ ] Testes automatizados completos
+- [ ] Gerenciamento de portfólio e carteiras
+- [ ] Indicadores técnicos e gráficos avançados
+- [ ] Alertas de preço personalizados
 
-### Fase 3 - Advanced Features (Q3 2026)
+### Fase 4 - Escala (Q4 2026)
 - [ ] Backtesting de estratégias
-- [ ] Machine Learning para predições
-- [ ] Mobile App (React Native)
-- [ ] Social trading features
-- [ ] API pública para desenvolvedores
-
-### Fase 4 - Scale (Q4 2026)
+- [ ] Analytics Service
 - [ ] Suporte a múltiplas exchanges
-- [ ] Trading algorítmico
-- [ ] Copy trading
-- [ ] Marketplace de estratégias
-- [ ] Programa de afiliados
+- [ ] Mobile App (React Native)
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Por favor:
-
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+3. Commit suas mudanças seguindo Conventional Commits
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
@@ -548,7 +527,5 @@ Contribuições são bem-vindas! Por favor:
 
 - Siga o ESLint e Prettier configurados
 - Use Conventional Commits
-- Mantenha cobertura de testes acima de 80%
-- Documente funções complexas
-
-
+- Mantenha cobertura de testes adequada
+- Replique a arquitetura em camadas existente nos novos serviços
