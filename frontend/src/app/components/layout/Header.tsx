@@ -1,39 +1,51 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Button from '../ui/Button';
+import { ROUTES } from '@/constants/routes';
+import { getButtonClassName } from '../ui/Button';
+
+const navLinks = [
+  { href: `${ROUTES.HOME}#features`, label: 'Recursos' },
+  { href: `${ROUTES.HOME}#how-it-works`, label: 'Como funciona' },
+  { href: `${ROUTES.HOME}#cta`, label: 'Começar' },
+];
 
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-bg-elevated/80 backdrop-blur-md border-b border-border-subtle">
-      <nav className="container mx-auto px-6 h-20 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-bg-elevated/80 backdrop-blur-md">
+      <nav
+        aria-label="Navegação principal"
+        className="container mx-auto flex h-20 items-center justify-between px-6"
+      >
         <div className="flex items-center gap-2 transition-opacity">
-          <Link href="/">
-            <Image src="/idn_logoname.png" alt="Logo" height={60} width={250} priority />
+          <Link href={ROUTES.HOME}>
+            <Image src="/idn_logoname.png" alt="IDN Capital" height={60} width={250} priority />
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-8">
-          <Link href="/#features" className="text-moss-dark hover:text-gold transition-colors">
-            Recursos
-          </Link>
-          <Link href="#precos" className="text-moss-dark hover:text-gold transition-colors">
-            Preços
-          </Link>
-          <Link href="#sobre" className="text-moss-dark hover:text-gold transition-colors">
-            Sobre
-          </Link>
+        <div className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-moss-dark transition-colors hover:text-gold"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/login">
-            <Button variant="outline" className="cursor-pointer">
-              Entrar
-            </Button>
+          <Link
+            href={ROUTES.LOGIN}
+            className={getButtonClassName({ variant: 'outline', className: 'cursor-pointer' })}
+          >
+            Entrar
           </Link>
-          <Link href="/register">
-            <Button variant="secondary" className="cursor-pointer">
-              Começar Grátis
-            </Button>
+          <Link
+            href={ROUTES.REGISTER}
+            className={getButtonClassName({ variant: 'secondary', className: 'cursor-pointer' })}
+          >
+            Começar Grátis
           </Link>
         </div>
       </nav>

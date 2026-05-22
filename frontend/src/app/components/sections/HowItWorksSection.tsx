@@ -2,80 +2,79 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
+const steps = [
+  {
+    id: 1,
+    title: 'Cadastro',
+    description: 'Registre-se gratuitamente e configure seu perfil de investidor em poucos minutos.',
+  },
+  {
+    id: 2,
+    title: 'Análise',
+    description: 'Acesse análises avançadas do seu portfólio e receba insights personalizados.',
+  },
+  {
+    id: 3,
+    title: 'Simule',
+    description: 'Teste diferentes estratégias de investimento com nosso simulador realista.',
+  },
+  {
+    id: 4,
+    title: 'Resultados',
+    description: 'Acompanhe o desempenho de seus investimentos e obtenha relatórios detalhados.',
+  },
+];
+
 export default function HowItWorksSection() {
-  const steps = [
-    {
-      id: 1,
-      title: 'Cadastro',
-      description:
-        'Registre-se gratuitamente e configure seu perfil de investidor em poucos minutos.',
-    },
-    {
-      id: 2,
-      title: 'Análise',
-      description: 'Acesse análises avançadas do seu portfólio e receba insights personalizados.',
-    },
-    {
-      id: 3,
-      title: 'Simule',
-      description: 'Teste diferentes estratégias de investimento com nosso simulador realista.',
-    },
-    {
-      id: 4,
-      title: 'Resultados',
-      description: 'Acompanhe o desempenho de seus investimentos e obtenga relatórios detalhados.',
-    },
-  ];
-
   return (
-    <section id="how-it-works" className="relative py-20">
-      <Image
-        src="/howitworks.png"
-        alt="How It Works Background"
-        fill
-        className="object-cover"
-        priority
-        quality={90}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 z-10"></div>
+    <section
+      id="how-it-works"
+      aria-labelledby="how-it-works-title"
+      className="relative py-20 scroll-mt-28"
+    >
+      <Image src="/howitworks.png" alt="" fill className="object-cover" priority quality={90} />
+      <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 to-black/30" />
 
-      <div className="container z-20 relative">
+      <div className="relative z-20 container">
         <motion.div
-          className="text-center mb-16"
+          className="mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-white font-bold text-center mb-5">Como Funciona</h2>
-          <p className="text-white text-lg text-center max-w-2xl mx-auto mb-12">
+          <h2 id="how-it-works-title" className="mb-5 text-center font-bold text-white">
+            Como Funciona
+          </h2>
+          <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-white">
             Descubra como nossa plataforma pode transformar sua experiência de investimento em 4
             passos simples.
           </p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
+        <ol className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => (
-            <div key={step.id} className="bg-gold-light/80 p-6 rounded-lg shadow-md text-center">
+            <li key={step.id} className="rounded-lg bg-gold-light/80 p-6 text-center shadow-md">
               <motion.div
-                className="text-center mb-16"
+                className="mb-16 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1 }}
               >
-                <h3 className="text-moss font-semibold mb-3">{step.title}</h3>
+                <h3 className="mb-3 font-semibold text-moss">{step.title}</h3>
                 <p className="text-moss">{step.description}</p>
               </motion.div>
-              {index < steps.length && (
+              {index < steps.length - 1 && (
                 <motion.div
-                  className="hidden lg:block mx-4"
+                  aria-hidden="true"
+                  className="mx-4 hidden lg:block"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 + 0.3 }}
                 >
                   <svg
-                    className="w-8 h-8 text-gold-light"
+                    className="h-8 w-8 text-gold-light"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -89,9 +88,9 @@ export default function HowItWorksSection() {
                   </svg>
                 </motion.div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

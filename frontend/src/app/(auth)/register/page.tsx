@@ -1,12 +1,13 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
-import Button from '@/app/components/ui/Button';
 import { useState } from 'react';
-import { RegisterSchema } from '@/lib/validations/auth';
 import { z } from 'zod';
-import { useAuth, useRequireAuth } from '@/hooks/useAuth';
+import AuthPageShell from '@/app/components/auth/AuthPageShell';
+import AuthTextField from '@/app/components/auth/AuthTextField';
+import Button from '@/app/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
+import { useAuth, useRequireAuth } from '@/hooks/useAuth';
+import { RegisterSchema } from '@/lib/validations/auth';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -34,142 +35,110 @@ export default function RegisterPage() {
       });
       return;
     }
+
     setFieldErrors({});
+
     try {
       await register({ email, password, name }).unwrap();
     } catch (_error) {}
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 pt-30 pb-10">
-      <Image
-        src="/herosection1.png"
-        alt="Background"
-        fill
-        className="object-cover"
-        priority
-        quality={75}
-      />
+    <AuthPageShell
+      title="Bem-vindo"
+      description="Faça seu registro para acessar sua conta e aproveitar nossos serviços exclusivos!"
+    >
+      <form
+        onSubmit={handleSubmit}
+        aria-labelledby="auth-page-title"
+        aria-describedby="auth-page-description"
+      >
+        <AuthTextField
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            if (error) clearError();
+            if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
+          }}
+          type="text"
+          disabled={loading}
+          id="name"
+          name="name"
+          autoComplete="name"
+          required
+          placeholder="Seu nome"
+          label="Nome"
+          error={fieldErrors.name}
+        />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
+        <AuthTextField
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) clearError();
+            if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
+          }}
+          type="email"
+          disabled={loading}
+          id="email"
+          name="email"
+          autoComplete="email"
+          required
+          placeholder="seu@email.com"
+          label="Email"
+          error={fieldErrors.email}
+        />
 
-      <div className="relative z-20 w-full max-w-md">
-        <form
-          className="bg-moss-light/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gold-light/20"
-          onSubmit={handleSubmit}
+        <AuthTextField
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (error) clearError();
+            if (fieldErrors.password)
+              setFieldErrors((prev) => ({ ...prev, password: undefined }));
+          }}
+          type="password"
+          id="password"
+          disabled={loading}
+          name="password"
+          autoComplete="new-password"
+          required
+          placeholder="••••••••"
+          label="Senha"
+          error={fieldErrors.password}
+        />
+
+        {error && (
+          <div className="mb-4 text-sm text-red-500" role="alert" aria-live="polite">
+            <p className="text-center text-sm text-red-200">{error}</p>
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          variant="secondary"
+          size="lg"
+          className="w-full cursor-pointer"
+          disabled={loading}
         >
-          <h2 className="text-3xl font-bold mb-2 text-center text-gold-light">Bem-vindo</h2>
-          <p className="text-center text-white/80 mb-8 text-sm">
-            Faça seu registro para acessar sua conta e aproveitar nossos serviços exclusivos!
-          </p>
+          {loading ? 'Registrando...' : 'Cadastrar'}
+        </Button>
 
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
-              Nome
-            </label>
-            <input
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (error) clearError();
-                if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
-              }}
-              type="text"
-              disabled={loading}
-              id="name"
-              name="name"
-              autoComplete="name"
-              required
-              className="w-full bg-white/10 backdrop-blur-sm border border-gold-light/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-gold-light
-  focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="Seu Nome"
-            />
-            {fieldErrors.name && <p className="mt-1 text-sm text-red-300">{fieldErrors.name}</p>}
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-              Email
-            </label>
-            <input
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (error) clearError();
-                if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
-              }}
-              type="email"
-              disabled={loading}
-              id="email"
-              name="email"
-              autoComplete="email"
-              required
-              className="w-full bg-white/10 backdrop-blur-sm border border-gold-light/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-gold-light
-  focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="seu@email.com"
-            />
-            {fieldErrors.email && <p className="mt-1 text-sm text-red-300">{fieldErrors.email}</p>}
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-              Senha
-            </label>
-            <input
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                if (error) clearError();
-                if (fieldErrors.password)
-                  setFieldErrors((prev) => ({ ...prev, password: undefined }));
-              }}
-              type="password"
-              id="password"
-              disabled={loading}
-              name="password"
-              autoComplete="new-password"
-              required
-              className="w-full bg-white/10 backdrop-blur-sm border border-gold-light/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-gold-light
-  focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="••••••••"
-            />
-            {fieldErrors.password && (
-              <p className="mt-1 text-sm text-red-300">{fieldErrors.password}</p>
-            )}
-          </div>
-
-          {error && (
-            <div className="mb-4 text-red-500 text-sm">
-              <p className="text-red-200 text-sm text-center">{error}</p>
-            </div>
-          )}
-
-          <Button
-            type="submit"
-            variant="secondary"
-            size="lg"
-            className="w-full cursor-pointer"
-            disabled={loading}
+        <p className="mt-6 text-center text-sm text-white/80">
+          Já possui uma conta?{' '}
+          <Link
+            href={ROUTES.LOGIN}
+            className="font-semibold text-gold-light transition-colors hover:text-gold"
           >
-            {loading ? 'Registrando...' : 'Cadastrar'}
-          </Button>
-
-          <p className="mt-6 text-center text-sm text-white/80">
-            Já possui uma conta?{' '}
-            <Link
-              href={ROUTES.LOGIN}
-              className="text-gold-light hover:text-gold font-semibold transition-colors"
-            >
-              Faça login
-            </Link>
-          </p>
-          <p className="text-center mt-6 text-white/70 text-sm">
-            <Link href={ROUTES.HOME} className="hover:text-gold-light transition-colors">
-              Voltar para a página inicial
-            </Link>
-          </p>
-        </form>
-      </div>
-    </div>
+            Faça login
+          </Link>
+        </p>
+        <p className="mt-6 text-center text-sm text-white/70">
+          <Link href={ROUTES.HOME} className="transition-colors hover:text-gold-light">
+            Voltar para a página inicial
+          </Link>
+        </p>
+      </form>
+    </AuthPageShell>
   );
 }

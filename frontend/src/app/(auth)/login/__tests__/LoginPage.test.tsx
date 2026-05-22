@@ -20,6 +20,7 @@ describe('LoginPage', () => {
   const mockDispatch = jest.fn();
 
   beforeEach(() => {
+    jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
     (useAppDispatch as unknown as jest.Mock).mockReturnValue(mockDispatch);
     (useAppSelector as unknown as jest.Mock).mockReturnValue({
@@ -33,7 +34,7 @@ describe('LoginPage', () => {
     render(<LoginPage />);
 
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'user@teste.com' } });
-    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'senha123' } });
+    fireEvent.change(screen.getByLabelText(/senha/i), { target: { value: 'senha123' } });
 
     fireEvent.click(screen.getByRole('button', { name: /entrar/i }));
 
@@ -83,12 +84,12 @@ describe('LoginPage', () => {
     render(<LoginPage />);
 
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'errado@teste.com' } });
-    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: '123' } });
+    fireEvent.change(screen.getByLabelText(/senha/i), { target: { value: '123456' } });
     fireEvent.click(screen.getByRole('button', { name: /entrar/i }));
 
     expect(loginThunk).toHaveBeenCalledWith({
       email: 'errado@teste.com',
-      password: '123',
+      password: '123456',
     });
 
     expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
