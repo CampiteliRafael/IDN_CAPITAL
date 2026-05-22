@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <div className="container">
+    <footer className="container">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 mt-10">
         <div>
           <Image src="/idn_logoname.png" alt="Logo" height={60} width={250} />
@@ -56,14 +56,14 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-4">Redes Sociais</h4>
           <div className="flex gap-4">
-            <a href="#" className="text-gray-400 hover:text-gold-light">
-              <span className="text-2xl">𝕏</span>
+            <a href="#" aria-label="IDN Capital no X (Twitter)" className="text-gray-400 hover:text-gold-light">
+              <span aria-hidden="true" className="text-2xl">𝕏</span>
             </a>
-            <a href="#" className="text-gray-400 hover:text-gold-light">
-              <span className="text-2xl">in</span>
+            <a href="#" aria-label="IDN Capital no LinkedIn" className="text-gray-400 hover:text-gold-light">
+              <span aria-hidden="true" className="text-2xl">in</span>
             </a>
-            <a href="#" className="text-gray-400 hover:text-gold-light">
-              <span className="text-2xl">▶</span>
+            <a href="#" aria-label="IDN Capital no YouTube" className="text-gray-400 hover:text-gold-light">
+              <span aria-hidden="true" className="text-2xl">▶</span>
             </a>
           </div>
         </div>
@@ -72,6 +72,6 @@ export default function Footer() {
       <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
         <p>© 2026 IDN Capital. Todos os direitos reservados. | MIT License</p>
       </div>
-    </div>
+    </footer>
   );
 }

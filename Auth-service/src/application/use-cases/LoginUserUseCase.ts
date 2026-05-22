@@ -3,7 +3,11 @@ import { IHashService } from '../services/index.js';
 import { UserResponseDto } from '../dtos/index.js';
 import { ITokenService, TokenPayload } from '../services/index.js';
 import { LoginDto } from '../dtos/index.js';
-import { InvalidCredentialsError, UserNotFoundError } from '../../domain/errors/index.js';
+import {
+  InvalidCredentialsError,
+  UserNotFoundError,
+  UserInactiveError,
+} from '../../domain/errors/index.js';
 
 interface LoginResponse {
   user: UserResponseDto;
@@ -29,7 +33,7 @@ export class LoginUserUseCase {
     }
 
     if (!user.isActive) {
-      throw new Error('User account is inactive.');
+      throw new UserInactiveError();
     }
 
     const tokenPayload: TokenPayload = {

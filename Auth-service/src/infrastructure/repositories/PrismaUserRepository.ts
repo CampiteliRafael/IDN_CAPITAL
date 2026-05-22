@@ -3,7 +3,7 @@ import { IUserRepository } from '../../domain/repositories/IUserRepository.js';
 import { User, Role } from '../../domain/entities/User.js';
 
 export class PrismaUserRepository implements IUserRepository {
-  private prisma: PrismaClient;
+  private readonly prisma: PrismaClient;
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;

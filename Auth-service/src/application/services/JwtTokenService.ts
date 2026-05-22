@@ -3,8 +3,8 @@ import { TokenPayload, ITokenService } from './interfaces/ITokenService.js';
 import { InvalidTokenError } from '../../domain/errors/index.js';
 
 export class JwtTokenService implements ITokenService {
-  private secretKey: string;
-  private expiresIn: SignOptions['expiresIn'];
+  private readonly secretKey: string;
+  private readonly expiresIn: SignOptions['expiresIn'];
 
   constructor(secretKey: string, expiresIn: SignOptions['expiresIn'] = '24h') {
     this.secretKey = secretKey;

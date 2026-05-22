@@ -5,6 +5,7 @@ import {
   UserAlreadyExistsError,
   UserNotFoundError,
   InvalidCredentialsError,
+  UserInactiveError,
   InvalidTokenError,
 } from '../../domain/errors/index.js';
 
@@ -42,11 +43,15 @@ export const errorHandler = (
     return;
   }
 
-  if (error instanceof UserNotFoundError || error instanceof InvalidCredentialsError) {
+  if (
+    error instanceof UserNotFoundError ||
+    error instanceof InvalidCredentialsError ||
+    error instanceof UserInactiveError
+  ) {
     res.status(401).json({
       success: false,
       error: {
-        message: error.message,
+        message: 'Invalid credentials.',
         code: 'INVALID_CREDENTIALS',
       },
     });

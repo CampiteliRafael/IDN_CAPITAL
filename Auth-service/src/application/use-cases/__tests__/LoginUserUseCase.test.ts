@@ -2,7 +2,7 @@ import { LoginUserUseCase } from '../LoginUserUseCase.js';
 import { IUserRepository } from '../../../domain/repositories/IUserRepository.js';
 import { IHashService, ITokenService } from '../../services/index.js';
 import { User, Role } from '../../../domain/entities/User.js';
-import { InvalidCredentialsError, UserNotFoundError } from '../../../domain/errors/index.js';
+import { InvalidCredentialsError, UserNotFoundError, UserInactiveError } from '../../../domain/errors/index.js';
 
 describe('LoginUserUseCase', () => {
   let mockUserRepository: jest.Mocked<IUserRepository>;
@@ -94,9 +94,7 @@ describe('LoginUserUseCase', () => {
       mockUserRepository.findByEmail.mockResolvedValue(inactiveUser);
       mockHashService.comparePassword.mockResolvedValue(true);
 
-      await expect(loginUserUseCase.execute(loginData)).rejects.toThrow(
-        'User account is inactive.'
-      );
+      await expect(loginUserUseCase.execute(loginData)).rejects.toThrow(UserInactiveError);
     });
 
     it('should generate a token with correct payload', async () => {

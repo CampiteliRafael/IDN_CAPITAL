@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { LoginSchema } from '@/lib/validations/auth';
 import { z } from 'zod';
 import { useAuth, useRequireAuth } from '@/hooks/useAuth';
+import { ROUTES } from '@/constants/routes';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -84,7 +85,7 @@ export default function LoginPage() {
 
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-              Password
+              Senha
             </label>
             <input
               value={password}
@@ -138,14 +139,14 @@ export default function LoginPage() {
           <p className="mt-6 text-center text-sm text-white/80">
             Não tem uma conta?{' '}
             <Link
-              href="/register"
+              href={ROUTES.REGISTER}
               className="text-gold-light hover:text-gold font-semibold transition-colors"
             >
               Cadastre-se
             </Link>
           </p>
           <p className="text-center mt-6 text-white/70 text-sm">
-            <Link href="/" className="hover:text-gold-light transition-colors">
+            <Link href={ROUTES.HOME} className="hover:text-gold-light transition-colors">
               Voltar para a página inicial
             </Link>
           </p>

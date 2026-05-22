@@ -4,7 +4,7 @@ import { LoginDto, RegisterDto, User } from '../types/auth';
 import { AxiosError } from 'axios';
 
 interface AuthState {
-  user: User | undefined | null;
+  user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -25,9 +25,9 @@ export const loginThunk = createAsyncThunk(
       return response.data!.user;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const message = error.response?.data?.error?.message || 'Login failed';
-        return rejectWithValue(message);
+        return rejectWithValue(error.response?.data?.error?.message || 'Login failed');
       }
+      return rejectWithValue('An unexpected error occurred');
     }
   }
 );
@@ -40,9 +40,9 @@ export const registerThunk = createAsyncThunk(
       return response.data!.user;
     } catch (error) {
       if (error instanceof AxiosError) {
-        const message = error.response?.data?.error?.message || 'Registration failed';
-        return rejectWithValue(message);
+        return rejectWithValue(error.response?.data?.error?.message || 'Registration failed');
       }
+      return rejectWithValue('An unexpected error occurred');
     }
   }
 );
@@ -50,12 +50,11 @@ export const registerThunk = createAsyncThunk(
 export const logoutThunk = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
   try {
     await authService.logout();
-    return;
   } catch (error) {
     if (error instanceof AxiosError) {
-      const message = error.response?.data?.error?.message || 'Logout failed';
-      return rejectWithValue(message);
+      return rejectWithValue(error.response?.data?.error?.message || 'Logout failed');
     }
+    return rejectWithValue('An unexpected error occurred');
   }
 });
 

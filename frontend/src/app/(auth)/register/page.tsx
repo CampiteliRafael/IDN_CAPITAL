@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { RegisterSchema } from '@/lib/validations/auth';
 import { z } from 'zod';
 import { useAuth, useRequireAuth } from '@/hooks/useAuth';
+import { ROUTES } from '@/constants/routes';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -126,7 +127,7 @@ export default function RegisterPage() {
               id="password"
               disabled={loading}
               name="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               required
               className="w-full bg-white/10 backdrop-blur-sm border border-gold-light/30 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-gold-light
   focus:border-gold-light transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -156,14 +157,14 @@ export default function RegisterPage() {
           <p className="mt-6 text-center text-sm text-white/80">
             Já possui uma conta?{' '}
             <Link
-              href="/login"
+              href={ROUTES.LOGIN}
               className="text-gold-light hover:text-gold font-semibold transition-colors"
             >
               Faça login
             </Link>
           </p>
           <p className="text-center mt-6 text-white/70 text-sm">
-            <Link href="/" className="hover:text-gold-light transition-colors">
+            <Link href={ROUTES.HOME} className="hover:text-gold-light transition-colors">
               Voltar para a página inicial
             </Link>
           </p>
