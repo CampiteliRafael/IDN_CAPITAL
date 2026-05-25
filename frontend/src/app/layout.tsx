@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
 import { ReduxProvider } from '@/lib/store/ReduxProvider';
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,11 +30,9 @@ export default function RootLayout({
           <a href="#main-content" className="skip-link">
             Pular para o conteúdo principal
           </a>
-          <Header />
           <main id="main-content" className="flex-1">
             {children}
           </main>
-          <Footer />
         </ReduxProvider>
       </body>
     </html>

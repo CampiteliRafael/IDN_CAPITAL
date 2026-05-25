@@ -6,6 +6,7 @@ import { AxiosError } from 'axios';
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  authResolved: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -13,9 +14,25 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
+  authResolved: false,
   loading: false,
   error: null,
 };
+
+export const fetchCurrentUserThunk = createAsyncThunk(
+  'auth/currentUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authService.me();
+      return response.data!.user;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data?.error?.message || 'Session not found');
+      }
+      return rejectWithValue('An unexpected error occurred');
+    }
+  }
+);
 
 export const loginThunk = createAsyncThunk(
   'auth/login',
@@ -68,10 +85,25 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
       state.isAuthenticated = action.payload !== null;
+      state.authResolved = true;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchCurrentUserThunk.pending, (state) => {
+        state.authResolved = false;
+      })
+      .addCase(fetchCurrentUserThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.authResolved = true;
+        state.error = null;
+      })
+      .addCase(fetchCurrentUserThunk.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        state.authResolved = true;
+      })
       .addCase(loginThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -80,10 +112,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.authResolved = true;
         state.error = null;
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
+        state.authResolved = true;
         state.error = action.payload as string;
       })
       .addCase(registerThunk.pending, (state) => {
@@ -94,10 +128,12 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.authResolved = true;
         state.error = null;
       })
       .addCase(registerThunk.rejected, (state, action) => {
         state.loading = false;
+        state.authResolved = true;
         state.error = action.payload as string;
       })
       .addCase(logoutThunk.pending, (state) => {
@@ -108,6 +144,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = null;
         state.isAuthenticated = false;
+        state.authResolved = true;
         state.error = null;
       })
       .addCase(logoutThunk.rejected, (state, action) => {

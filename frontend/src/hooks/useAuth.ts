@@ -13,13 +13,16 @@ import { ROUTES } from '@/constants/routes';
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, loading, error, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, loading, error, isAuthenticated, authResolved } = useAppSelector(
+    (state) => state.auth
+  );
 
   return {
     user,
     loading,
     error,
     isAuthenticated,
+    authResolved,
     login: (credentials: LoginDto) => dispatch(loginThunk(credentials)),
     register: (data: RegisterDto) => dispatch(registerThunk(data)),
     logout: () => dispatch(logoutThunk()),
@@ -28,11 +31,22 @@ export function useAuth() {
 }
 
 export function useRequireAuth(redirectTo = ROUTES.DASHBOARD) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, authResolved } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) router.push(redirectTo);
-  }, [isAuthenticated, router, redirectTo]);
-  return { isAuthenticated };
+    if (authResolved && isAuthenticated) router.push(redirectTo);
+  }, [authResolved, isAuthenticated, router, redirectTo]);
+  return { isAuthenticated, authResolved };
+}
+
+export function useProtectedRoute(redirectTo = ROUTES.LOGIN) {
+  const { isAuthenticated, authResolved } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (authResolved && !isAuthenticated) router.push(redirectTo);
+  }, [authResolved, isAuthenticated, router, redirectTo]);
+
+  return { isAuthenticated, authResolved };
 }

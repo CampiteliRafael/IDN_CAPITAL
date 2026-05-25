@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import RegisterPage from '../page';
+import RegisterPage from '../../(public)/(auth)/register/page';
 import { useAppDispatch, useAppSelector, registerThunk, clearError } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import '@testing-library/jest-dom';
@@ -31,6 +31,7 @@ describe('RegisterPage', () => {
       loading: false,
       error: null,
       isAuthenticated: false,
+      authResolved: true,
     });
   });
 
@@ -54,6 +55,7 @@ describe('RegisterPage', () => {
       loading: false,
       error: null,
       isAuthenticated: true,
+      authResolved: true,
     });
 
     render(<RegisterPage />);
@@ -66,6 +68,7 @@ describe('RegisterPage', () => {
       loading: false,
       error: 'Erro de registro',
       isAuthenticated: false,
+      authResolved: true,
     });
 
     render(<RegisterPage />);
@@ -81,6 +84,7 @@ describe('RegisterPage', () => {
       loading: true,
       error: null,
       isAuthenticated: false,
+      authResolved: true,
     });
 
     render(<RegisterPage />);

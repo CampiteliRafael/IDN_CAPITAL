@@ -45,3 +45,4 @@ export interface LogoutResponse {
 
 export type LoginResponse = ApiResponse<AuthResponse>;
 export type RegisterResponse = ApiResponse<AuthResponse>;
+export type CurrentUserResponse = ApiResponse<AuthResponse>;

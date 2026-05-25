@@ -3,7 +3,11 @@ import { PrismaUserRepository } from '../repositories/PrismaUserRepository.js';
 import { BcryptHashService } from '../../application/services/index.js';
 import { JwtTokenService } from '../../application/services/index.js';
 import { env } from '../config/env.js';
-import { RegisterUserUseCase, LoginUserUseCase } from '../../application/use-cases/index.js';
+import {
+  RegisterUserUseCase,
+  LoginUserUseCase,
+  GetCurrentUserUseCase,
+} from '../../application/use-cases/index.js';
 
 export const userRepository = new PrismaUserRepository(prisma);
 export const hashService = new BcryptHashService(10);
@@ -15,3 +19,4 @@ export const registerUserUseCase = new RegisterUserUseCase(
   tokenService
 );
 export const loginUserUseCase = new LoginUserUseCase(userRepository, hashService, tokenService);
+export const getCurrentUserUseCase = new GetCurrentUserUseCase(userRepository, tokenService);

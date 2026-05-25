@@ -1,11 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import { RegisterUserUseCase, LoginUserUseCase } from '../../application/use-cases/index.js';
+import {
+  RegisterUserUseCase,
+  LoginUserUseCase,
+  GetCurrentUserUseCase,
+} from '../../application/use-cases/index.js';
 import { CreateUserSchema, LoginSchema } from '../../application/dtos/index.js';
 
 export class AuthController {
   constructor(
     private registerUserUseCase: RegisterUserUseCase,
-    private loginUserUseCase: LoginUserUseCase
+    private loginUserUseCase: LoginUserUseCase,
+    private getCurrentUserUseCase: GetCurrentUserUseCase
   ) {}
 
   register = async (req: Request, res: Response, next: NextFunction) => {
@@ -63,6 +68,20 @@ export class AuthController {
       res.status(200).json({
         success: true,
         message: 'Logged out successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  me = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const token = req.cookies?.token as string | undefined;
+      const user = await this.getCurrentUserUseCase.execute({ token });
+
+      res.status(200).json({
+        success: true,
+        data: { user },
       });
     } catch (error) {
       next(error);

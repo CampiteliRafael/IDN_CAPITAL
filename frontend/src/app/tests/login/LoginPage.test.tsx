@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import LoginPage from '../page';
+import LoginPage from '../../(public)/(auth)/login/page';
 import { useAppDispatch, useAppSelector, loginThunk, clearError } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import '@testing-library/jest-dom';
@@ -27,6 +27,7 @@ describe('LoginPage', () => {
       loading: false,
       error: null,
       isAuthenticated: false,
+      authResolved: true,
     });
   });
 
@@ -49,6 +50,7 @@ describe('LoginPage', () => {
       loading: false,
       error: null,
       isAuthenticated: true,
+      authResolved: true,
     });
 
     render(<LoginPage />);
@@ -61,6 +63,7 @@ describe('LoginPage', () => {
       loading: true,
       error: null,
       isAuthenticated: false,
+      authResolved: true,
     });
 
     render(<LoginPage />);
@@ -79,6 +82,7 @@ describe('LoginPage', () => {
       loading: false,
       error: 'Invalid credentials',
       isAuthenticated: false,
+      authResolved: true,
     });
 
     render(<LoginPage />);
@@ -100,6 +104,7 @@ describe('LoginPage', () => {
       loading: false,
       error: 'Previous error',
       isAuthenticated: false,
+      authResolved: true,
     });
 
     render(<LoginPage />);

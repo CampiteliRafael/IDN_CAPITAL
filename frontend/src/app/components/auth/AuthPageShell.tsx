@@ -10,7 +10,14 @@ interface AuthPageShellProps {
 export default function AuthPageShell({ title, description, children }: AuthPageShellProps) {
   return (
     <section className="relative flex min-h-screen items-center justify-center px-4 pb-10 pt-30">
-      <Image src="/herosection1.png" alt="" fill className="object-cover" priority quality={75} />
+      <Image
+        src="/herosection1.png"
+        alt="background"
+        fill
+        className="object-cover"
+        priority
+        quality={75}
+      />
 
       <div
         aria-hidden="true"

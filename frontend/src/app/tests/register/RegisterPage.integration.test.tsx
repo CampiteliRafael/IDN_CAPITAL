@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import '@testing-library/jest-dom';
 
-import RegisterPage from '../page';
+import RegisterPage from '../../(public)/(auth)/register/page';
 import authReducer from '@/lib/store/authSlice';
 import { authService } from '@/lib/api/authService';
 import { useRouter } from 'next/navigation';
@@ -170,7 +170,13 @@ describe('RegisterPage integration', () => {
     const store = configureStore({
       reducer: { auth: authReducer },
       preloadedState: {
-        auth: { user: mockUser, isAuthenticated: true, loading: false, error: null },
+        auth: {
+          user: mockUser,
+          isAuthenticated: true,
+          authResolved: true,
+          loading: false,
+          error: null,
+        },
       },
     });
 

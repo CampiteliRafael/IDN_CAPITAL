@@ -6,6 +6,7 @@ import {
   RegisterResponse,
   ApiResponse,
   LogoutResponse,
+  CurrentUserResponse,
 } from '../types/auth';
 
 export const authService = {
@@ -21,6 +22,11 @@ export const authService = {
 
   logout: async (): Promise<ApiResponse<LogoutResponse>> => {
     const response = await api.post<ApiResponse<LogoutResponse>>('/auth/logout');
+    return response.data;
+  },
+
+  me: async (): Promise<CurrentUserResponse> => {
+    const response = await api.get<CurrentUserResponse>('/auth/me');
     return response.data;
   },
 };
