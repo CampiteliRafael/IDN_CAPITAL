@@ -74,6 +74,41 @@ services:
 
     command: npm run dev
 
+  market-service:
+    build:
+      context: ./market-service
+      dockerfile: Dockerfile
+    container_name: idn_market_service
+    ports:
+      - "${MARKET_SERVICE_PORT}:${MARKET_SERVICE_PORT}"
+
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${MARKET_SERVICE_PORT}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    networks:
+      - idn_network
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:${MARKET_SERVICE_PORT}/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+    volumes:
+      - ./market-service:/app
+      - /app/node_modules
+
+    command: npm run dev
+
   frontend:
     build:
       context: ./frontend
