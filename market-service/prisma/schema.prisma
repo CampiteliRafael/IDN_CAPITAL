@@ -1,9 +1,18 @@
 datasource db {
     provider = "postgresql"
+    url = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma_client"
+    provider = "prisma_client-js"
     output = "./generated"
+}
+
+model Portfolio {
+    id String @id @default(cuid())
+    userId String
+    name String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
